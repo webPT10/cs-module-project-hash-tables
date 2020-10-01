@@ -25,7 +25,7 @@ class HashTable:
         self.storage = [None] * (capacity)
         self.size = 0
         self.max_load = 0.7
-        self.min_load = 0.3
+        self.min_load = 0.2
 
     def get_num_slots(self):
         """
@@ -37,7 +37,7 @@ class HashTable:
 
         Implement this.
         """
-        return self.capacity
+        return len(self.storage)
 
 
     def get_load_factor(self):
@@ -46,7 +46,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return self.size / self.capacity if self.size > 0 else 0
 
 
     def fnv1(self, key):
@@ -56,17 +56,19 @@ class HashTable:
         Implement this, and/or DJB2.
         """
 
-        # Your code here
-
-
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        hash = 5381
 
+        # loop through each character in key
+        for char in key:
+            # multiplies hash value by 33 and adds integer representation of character
+            hash = (hash * 33) + ord(char)
+        return hash
 
     def hash_index(self, key):
         """
@@ -84,7 +86,22 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        self.size += 1
+
+        if self.storage[index] is None:
+            self.storage[index] = HashTableEntry(key,value)
+        else:
+            node = self.storage[index]
+            while node:
+                if node.key == key:
+                    node.value = value
+                    return
+                elif node.next:
+                    node = node.next
+                else:
+                    node.next = HashTableEntry(key, value)
+                    return
 
 
     def delete(self, key):
@@ -95,7 +112,25 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+
+        if self.storage[index]:
+            self.size -= 1
+
+            if self.storage[index].key == key:
+                if self.storage[index].next is not None:
+                    self.storage[index] = self.storage[index].next
+                else:
+                    self.storage[index] = None
+            else:
+                node = self.storage[index]
+                while node.next:
+                    if node.next.key == key:
+                        node.next = None
+                    else:
+                        node = node.next
+        else:
+            print('Item does not inhabit either time or space.')
 
 
     def get(self, key):
@@ -106,7 +141,17 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+
+        if self.storage[index]:
+            node = self.storage[index]
+            while node:
+                if node.key == key:
+                    return node.value
+                else:
+                    node = node.next
+        else:
+            return self.storage[index]
 
 
     def resize(self, new_capacity):
