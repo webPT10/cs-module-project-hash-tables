@@ -11,7 +11,6 @@ class HashTableEntry:
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
 
-
 class HashTable:
     """
     A hash table that with `capacity` buckets
@@ -22,10 +21,11 @@ class HashTable:
 
     def __init__(self, capacity):
         self.capacity = capacity # number of buckets in the hash table
-        self.storage = [None] * (capacity)
+        self.storage = [None] * (capacity) # array filled with values of None
         self.size = 0
-        self.max_load = 0.7
-        self.min_load = 0.2
+        # 
+        self.max_load = 0.7 # how big to get before having to add items 
+        self.min_load = 0.2 
 
     def get_num_slots(self):
         """
@@ -56,6 +56,7 @@ class HashTable:
         Implement this, and/or DJB2.
         """
 
+    # Hashing Function
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
@@ -91,6 +92,7 @@ class HashTable:
 
         if self.storage[index] is None:
             self.storage[index] = HashTableEntry(key,value)
+        
         else:
             node = self.storage[index]
             while node:
@@ -161,7 +163,30 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        if self.get_load_factor() > self.max_load_factor:
+            old_storage = self.storage.copy()
+            self.capacity = new_capacity or self.capacity * 2
+            self.storage = [None] * self.capacity
+
+            for item in old_storage:
+                while item:
+                    self.put(item.key, item.value)
+                    item = item.next
+
+            return
+        elif self.get_load_factor() < self.min_load_factor and self.capacity > 8:
+            old_storage = self.storage.copy()
+            self.capacity = new_capacity or self.capacity / 2
+            self.storage = [None] * self.capacity
+
+            for item in old_storage:
+                while item:
+                    self.put(item.key, item.value)
+                    item = item.next
+            return
+        else:
+            return
+
 
 
 
