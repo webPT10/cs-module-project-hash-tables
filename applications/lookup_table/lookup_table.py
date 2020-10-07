@@ -17,9 +17,9 @@ def slowfun(x, y):
     Rewrite slowfun_too_slow() in here so that the program produces the same
     output, but completes quickly instead of taking ages to run.
     """
-    if f'{x}, {y}' not in cache:
-        cache[f'{x},{y}'] = (math.factorial(math.pow(x,y)) // (x + y)) % 982451653
-    return cache[f'{x}, {y}']
+    if f'{x},{y}' not in cache:
+        cache[f'{x},{y}'] = (math.factorial(math.pow(x, y)) // (x + y)) % 982451653
+    return cache[f'{x},{y}']
 
 # Do not modify below this line!
 
